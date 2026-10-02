@@ -1,0 +1,73 @@
+// Source code is decompiled from a .class file using FernFlower decompiler (from Intellij IDEA).
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.Socket;
+
+public class servertest {
+   public servertest() {
+   }
+
+   public static void main(String[] var0) {
+      try {
+         Socket var1 = new Socket("localhost", 6379);
+
+         try {
+            OutputStream var2 = var1.getOutputStream();
+
+            try {
+               BufferedReader var3 = new BufferedReader(new InputStreamReader(var1.getInputStream()));
+
+               try {
+                  var2.write("*1\r\n$4\r\nPING\r\n".getBytes());
+                  var2.flush();
+                  String var4 = var3.readLine();
+                  System.out.println("Server response: " + var4);
+                  if ("+PONG".equals(var4)) {
+                     System.out.println("TEST PASSED!");
+                  } else {
+                     System.out.println("TEST FAILED!");
+                  }
+               } catch (Throwable var9) {
+                  try {
+                     var3.close();
+                  } catch (Throwable var8) {
+                     var9.addSuppressed(var8);
+                  }
+
+                  throw var9;
+               }
+
+               var3.close();
+            } catch (Throwable var10) {
+               if (var2 != null) {
+                  try {
+                     var2.close();
+                  } catch (Throwable var7) {
+                     var10.addSuppressed(var7);
+                  }
+               }
+
+               throw var10;
+            }
+
+            if (var2 != null) {
+               var2.close();
+            }
+         } catch (Throwable var11) {
+            try {
+               var1.close();
+            } catch (Throwable var6) {
+               var11.addSuppressed(var6);
+            }
+
+            throw var11;
+         }
+
+         var1.close();
+      } catch (Exception var12) {
+         var12.printStackTrace();
+      }
+
+   }
+}
